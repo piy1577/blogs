@@ -1,0 +1,54 @@
+package com.omnify.gayatri_blog.service.implementation;
+
+import com.omnify.gayatri_blog.model.Blog;
+import com.omnify.gayatri_blog.model.User;
+import com.omnify.gayatri_blog.repository.BlogRepository;
+import com.omnify.gayatri_blog.repository.UserRepository;
+import com.omnify.gayatri_blog.service.BlogService;
+import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class BlogServiceImplement implements BlogService {
+
+    @Autowired
+    BlogRepository br;
+    @Autowired
+    UserRepository ur;
+
+    @Override
+    public Blog createBlog(Blog b, Long id) {
+        User saved = ur.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        b.setUser(saved);
+        return br.save(b);
+    }
+
+    @Override
+    public Page<Blog> getAllBlog(Pageable page) {
+        return br.findAll(page);
+    }
+
+    @Override
+    public Blog getBlogById(Long id, Long user_id) {
+        return br.findByIdAndUserId(id, user_id).orElseThrow(() -> new RuntimeException("Blog not found"));
+    }
+
+    @Override
+    public Blog updateBlogById(Blog b, Long user_id) {
+        Blog saved =br.findByIdAndUserId(b.getId(), user_id).orElseThrow(() -> new RuntimeException("Blog not found"));
+        saved.setTitle(b.getTitle());
+        saved.setContent(b.getContent());
+        return br.save(saved);
+    }
+
+    @Override
+    public void deleteBlogById(Long Id, Long user_id) {
+        Blog saved =br.findByIdAndUserId(Id, user_id).orElseThrow(() -> new RuntimeException("Blog not found"));
+        br.deleteById(saved.getId());
+    }
+}
