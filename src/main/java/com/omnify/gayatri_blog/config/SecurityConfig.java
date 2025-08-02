@@ -26,7 +26,7 @@ public class SecurityConfig {
                     corsConfig.setAllowedOriginPatterns(List.of("*")); // Allow all origins
                     corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                     corsConfig.setAllowedHeaders(List.of("*"));
-                    corsConfig.setAllowCredentials(false); // Set to true only if using cookies or auth headers with specific origins
+                    corsConfig.setAllowCredentials(true); // Set to true only if using cookies or auth headers with specific origins
                     return corsConfig;
                 }))
                 .authorizeHttpRequests(auth -> auth
