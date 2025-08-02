@@ -20,7 +20,7 @@ public class UserServiceImplement implements UserService{
     @Override
     public User registerUser(User u) {
         User saved = ur.findFirstByEmail(u.getEmail()).get();
-        if(saved == null){
+        if(saved != null){
             throw new RuntimeException("User already Exists");
         }
 
