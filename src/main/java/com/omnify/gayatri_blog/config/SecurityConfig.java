@@ -15,15 +15,23 @@ public class SecurityConfig {
             return new BCryptPasswordEncoder();
         }
 
-        @Bean
-        public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-            http
-                    .csrf(csrf -> csrf.disable()) // Optional: Disable CSRF for APIs
-                    .cors(cors -> cors.disable()) // Already added
-                    .authorizeHttpRequests(auth -> auth
-                            .requestMatchers("/api/**").permitAll() // Public endpoints
-                            .anyRequest().authenticated() // Others need authentication
-                    );
-            return http.build();
-        }
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .csrf(csrf -> csrf.disable())
+                .cors(cors -> cors.configurationSource(request -> {
+                    var corsConfig = new org.springframework.web.cors.CorsConfiguration();
+                    corsConfig.setAllowedOriginPatterns(List.of("*")); // Allow all origins
+                    corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+                    corsConfig.setAllowedHeaders(List.of("*"));
+                    corsConfig.setAllowCredentials(false); // Set to true only if using cookies or auth headers with specific origins
+                    return corsConfig;
+                }))
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/**").permitAll()
+                        .anyRequest().authenticated()
+                );
+        return http.build();
+    }
+
 }
