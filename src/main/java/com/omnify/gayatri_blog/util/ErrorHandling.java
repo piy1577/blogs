@@ -12,25 +12,25 @@ public class ErrorHandling {
         @ExceptionHandler(Exception.class)
         public ResponseEntity<Map<String, String>> handleAllExceptions(Exception ex) {
             ex.printStackTrace(); // Log to console
-            return ResponseEntity.status(500).body(Map.of("Error", ex.toString()));
+            return ResponseEntity.status(500).body(Map.of("Error", ex.getMessage()));
         }
 
         @ExceptionHandler(UnauthorizedError.class)
         public ResponseEntity<Map<String, String>> UnauthorizedException(Exception ex) {
             ex.printStackTrace(); // Log to console
-            return ResponseEntity.status(401).body(Map.of("Error", ex.toString()));
+            return ResponseEntity.status(401).body(Map.of("Error", ex.getMessage()));
         }
 
         @ExceptionHandler(NotFoundError.class)
         public ResponseEntity<Map<String, String>> NotFoundException(Exception ex) {
             ex.printStackTrace(); // Log to console
-            return ResponseEntity.status(404).body(Map.of("Error", ex.toString()));
+            return ResponseEntity.status(404).body(Map.of("Error", ex.getMessage()));
         }
 
         @ExceptionHandler(BadRequestError.class)
         public ResponseEntity<Map<String, String>> BadRequestException(Exception ex) {
             ex.printStackTrace(); // Log to console
-            return ResponseEntity.status(400).body(Map.of("Error", ex.toString()));
+            return ResponseEntity.status(400).body(Map.of("Error", ex.getMessage()));
         }
 }
 
