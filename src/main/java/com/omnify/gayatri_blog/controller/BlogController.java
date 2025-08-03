@@ -40,7 +40,7 @@ public class BlogController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<Blog>> getAllBlogs(Pageable p){
+    public ResponseEntity<List<Blog>> getAllBlogs(Pageable p){
         return ResponseEntity.status(HttpStatus.OK).body(bs.getAllBlog(p));
     }
 
