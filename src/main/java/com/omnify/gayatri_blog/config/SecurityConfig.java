@@ -24,7 +24,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration corsConfig = new CorsConfiguration();
-                    corsConfig.setAllowedOriginPatterns(List.of("http://dummy-bucket-69.s3-website.ap-south-1.amazonaws.com"));
+                    corsConfig.setAllowedOriginPatterns(List.of("http://dummy-bucket-69.s3-website.ap-south-1.amazonaws.com", "http://localhost"));
                     corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                     corsConfig.setAllowedHeaders(List.of("*"));
                     corsConfig.setAllowCredentials(true);
