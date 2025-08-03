@@ -56,14 +56,8 @@ public class UserController {
 
         User savedUser = us.loginUser(u.get("email"), u.get("password"));
         String token = j.generateToken(savedUser.getId());
-        ResponseCookie cookie = ResponseCookie.from("token", token)
-                .path("/")       // Available to all paths
-                .httpOnly(true)  // Important for security - prevents JS access
-                .secure(false)    // Send only over HTTPS
-                .maxAge(7 * 24 * 60 * 60)  // 7 days expiration
-                .sameSite("Strict")
-                .build();
 
+        Cookie cookie = new Cookie("token", token);
         // Set cookie in headers
         return ResponseEntity.status(HttpStatus.OK)
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
