@@ -37,6 +37,6 @@ public class Blog {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    @JsonIgnoreProperties({"name", "email", "password", "blogs"})
+    @JsonIgnoreProperties({"email", "password", "blogs"})
     private User user;
 }
