@@ -34,7 +34,6 @@ public class UserController {
                 .secure(false)    // Send only over HTTPS
                 .path("/")       // Available to all paths
                 .maxAge(7 * 24 * 60 * 60)  // 7 days expiration
-                .sameSite("None")
                 .build();
 
         // Set cookie in headers
@@ -58,8 +57,7 @@ public class UserController {
                 .path("/")       // Available to all paths
                 .httpOnly(true)  // Important for security - prevents JS access
                 .secure(false)    // Send only over HTTPS
-                .maxAge(7 * 24 * 60 * 60)  // 7 days expiration
-                .sameSite("None")
+                .maxAge(7 * 24 * 60 * 60)
                 .build();
 
         // Set cookie in headers
