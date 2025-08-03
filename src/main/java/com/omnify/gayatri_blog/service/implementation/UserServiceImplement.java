@@ -19,11 +19,9 @@ public class UserServiceImplement implements UserService{
 
     @Override
     public User registerUser(User u) {
-        User saved = ur.findFirstByEmail(u.getEmail()).get();
-        if(saved != null){
+        if(ur.findFirstByEmail(u.getEmail()).isPresent()){
             throw new RuntimeException("User already Exists");
         }
-
         u.setPassword(bcrypt.encode(u.getPassword()));
         return ur.save(u);
     }
