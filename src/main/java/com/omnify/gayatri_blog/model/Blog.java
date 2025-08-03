@@ -1,6 +1,8 @@
 package com.omnify.gayatri_blog.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -36,6 +38,7 @@ public class Blog {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    @JsonIgnore
+    @JsonProperty("userId")
+    @JsonIgnoreProperties({"name", "email", "password", "blogs"})
     private User user;
 }
