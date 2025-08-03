@@ -2,6 +2,7 @@ package com.omnify.gayatri_blog.controller;
 
 import com.omnify.gayatri_blog.model.User;
 import com.omnify.gayatri_blog.service.UserService;
+import com.omnify.gayatri_blog.util.BadRequestError;
 import com.omnify.gayatri_blog.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -23,6 +24,9 @@ public class UserController {
 
     @PostMapping("register")
     public ResponseEntity<Map<String, String>> registerUser(@RequestBody User u) {
+        if(u.getEmail() == null || u.getPassword() == null|| u.getName() == null){
+            throw new BadRequestError(("Please fill all the required fields"));
+        }
         User savedUser = us.registerUser(u);
         String token = j.generateToken(savedUser.getId());
         ResponseCookie cookie = ResponseCookie.from("token", token)
@@ -44,6 +48,10 @@ public class UserController {
 
     @PostMapping("login")
     public ResponseEntity<Map<String, String>> loginUser(@RequestBody Map<String, String> u) {
+        if(u.get("email") == null || u.get("password") == null){
+            throw new BadRequestError(("Email and password are required"));
+        }
+
         User savedUser = us.loginUser(u.get("email"), u.get("password"));
         String token = j.generateToken(savedUser.getId());
         ResponseCookie cookie = ResponseCookie.from("token", token)
