@@ -4,6 +4,7 @@ import com.omnify.gayatri_blog.model.User;
 import com.omnify.gayatri_blog.service.UserService;
 import com.omnify.gayatri_blog.util.BadRequestError;
 import com.omnify.gayatri_blog.util.JwtUtil;
+import jakarta.servlet.http.Cookie;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("api/auth")
+@CrossOrigin(origins = {"http://dummy-bucket-69.s3-website.ap-south-1.amazonaws.com", "http://localhost:3000"}, allowCredentials = "true")
 public class UserController {
     @Autowired
     UserService us;
@@ -34,7 +36,7 @@ public class UserController {
                 .secure(false)    // Send only over HTTPS
                 .path("/")       // Available to all paths
                 .maxAge(7 * 24 * 60 * 60)  // 7 days expiration
-                .sameSite("Strict")
+                .sameSite("Lax")
                 .build();
 
         // Set cookie in headers
@@ -54,12 +56,14 @@ public class UserController {
 
         User savedUser = us.loginUser(u.get("email"), u.get("password"));
         String token = j.generateToken(savedUser.getId());
-        ResponseCookie cookie = ResponseCookie.from("token", token)
+        Cookie cookie = new Cookie("token", token);
+
+                ResponseCookie.from("token", token)
                 .path("/")       // Available to all paths
                 .httpOnly(true)  // Important for security - prevents JS access
                 .secure(false)    // Send only over HTTPS
                 .maxAge(7 * 24 * 60 * 60)  // 7 days expiration
-                .sameSite("Strict")
+                .sameSite("Lax")
                 .build();
 
         // Set cookie in headers
