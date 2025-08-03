@@ -63,7 +63,7 @@ public class UserController {
                 .build();
 
         // Set cookie in headers
-        return ResponseEntity.status(HttpStatus.CREATED)
+        return ResponseEntity.status(HttpStatus.OK)
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
                 .body(Map.of(
                         "email", savedUser.getEmail(),
