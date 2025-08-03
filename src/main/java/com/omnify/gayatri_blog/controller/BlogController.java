@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -41,6 +42,17 @@ public class BlogController {
     @GetMapping
     public ResponseEntity<Page<Blog>> getAllBlogs(Pageable p){
         return ResponseEntity.status(HttpStatus.OK).body(bs.getAllBlog(p));
+    }
+
+    @GetMapping("user")
+    public ResponseEntity<List<Blog>> getUserBlogs(@RequestHeader("Authorization")  String token){
+        if (token == null) {
+            throw new UnauthorizedError("Token not found");
+        }
+        Long userId = j.extractId(token);
+
+        List<Blog> l = bs.getBlogByUser(userId);
+        return ResponseEntity.status(HttpStatus.OK).body(l);
     }
 
     @GetMapping("{id}")

@@ -53,4 +53,9 @@ public class BlogServiceImplement implements BlogService {
         Blog saved =br.findByIdAndUserId(Id, user_id).orElseThrow(() -> new NotFoundError("Blog not found"));
         br.deleteById(saved.getId());
     }
+
+    @Override
+    public List<Blog> getBlogByUser(Long user_id) {
+        return br.findByUserId(user_id);
+    }
 }
