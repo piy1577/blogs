@@ -23,7 +23,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(request -> {
                     var corsConfig = new org.springframework.web.cors.CorsConfiguration();
-                    corsConfig.setAllowedOriginPatterns(List.of("http://localhost:3000/", "http://dummy-bucket-69.s3-website.ap-south-1.amazonaws.com/")); // Allow all origins
+                    corsConfig.setAllowedOriginPatterns(List.of("http://localhost:3000", "http://dummy-bucket-69.s3-website.ap-south-1.amazonaws.com")); // Allow all origins
                     corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                     corsConfig.setAllowedHeaders(List.of("*"));
                     corsConfig.setAllowCredentials(true); // Set to true only if using cookies or auth headers with specific origins
