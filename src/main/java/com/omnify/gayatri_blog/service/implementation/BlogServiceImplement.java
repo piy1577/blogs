@@ -5,6 +5,8 @@ import com.omnify.gayatri_blog.model.User;
 import com.omnify.gayatri_blog.repository.BlogRepository;
 import com.omnify.gayatri_blog.repository.UserRepository;
 import com.omnify.gayatri_blog.service.BlogService;
+import com.omnify.gayatri_blog.util.NotFoundError;
+import com.omnify.gayatri_blog.util.UnauthorizedError;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -23,7 +25,7 @@ public class BlogServiceImplement implements BlogService {
 
     @Override
     public Blog createBlog(Blog b, Long id) {
-        User saved = ur.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        User saved = ur.findById(id).orElseThrow(() -> new UnauthorizedError("User not found"));
         b.setUser(saved);
         return br.save(b);
     }
@@ -35,12 +37,12 @@ public class BlogServiceImplement implements BlogService {
 
     @Override
     public Blog getBlogById(Long id, Long user_id) {
-        return br.findByIdAndUserId(id, user_id).orElseThrow(() -> new RuntimeException("Blog not found"));
+        return br.findByIdAndUserId(id, user_id).orElseThrow(() -> new NotFoundError("Blog not found"));
     }
 
     @Override
     public Blog updateBlogById(Blog b, Long user_id) {
-        Blog saved =br.findByIdAndUserId(b.getId(), user_id).orElseThrow(() -> new RuntimeException("Blog not found"));
+        Blog saved =br.findByIdAndUserId(b.getId(), user_id).orElseThrow(() -> new NotFoundError("Blog not found"));
         saved.setTitle(b.getTitle());
         saved.setContent(b.getContent());
         return br.save(saved);
@@ -48,7 +50,7 @@ public class BlogServiceImplement implements BlogService {
 
     @Override
     public void deleteBlogById(Long Id, Long user_id) {
-        Blog saved =br.findByIdAndUserId(Id, user_id).orElseThrow(() -> new RuntimeException("Blog not found"));
+        Blog saved =br.findByIdAndUserId(Id, user_id).orElseThrow(() -> new NotFoundError("Blog not found"));
         br.deleteById(saved.getId());
     }
 }

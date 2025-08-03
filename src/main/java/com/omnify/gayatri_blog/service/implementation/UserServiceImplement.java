@@ -3,6 +3,8 @@ package com.omnify.gayatri_blog.service.implementation;
 import com.omnify.gayatri_blog.model.User;
 import com.omnify.gayatri_blog.repository.UserRepository;
 import com.omnify.gayatri_blog.service.UserService;
+import com.omnify.gayatri_blog.util.BadRequestError;
+import com.omnify.gayatri_blog.util.UnauthorizedError;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,7 +22,7 @@ public class UserServiceImplement implements UserService{
     @Override
     public User registerUser(User u) {
         if(ur.findFirstByEmail(u.getEmail()).isPresent()){
-            throw new RuntimeException("User already Exists");
+            throw new BadRequestError("User already Exists");
         }
         u.setPassword(bcrypt.encode(u.getPassword()));
         return ur.save(u);
@@ -28,10 +30,10 @@ public class UserServiceImplement implements UserService{
 
     @Override
     public User loginUser(String email, String password) {
-        User u = ur.findFirstByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
+        User u = ur.findFirstByEmail(email).orElseThrow(() -> new UnauthorizedError("User not found"));
 
         if(!bcrypt.matches(password, u.getPassword())) {
-            throw new RuntimeException("Invalid credentials");
+            throw new UnauthorizedError("Invalid credentials");
         }
         return u;
     }
