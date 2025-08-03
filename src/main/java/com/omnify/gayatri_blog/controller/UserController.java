@@ -4,7 +4,6 @@ import com.omnify.gayatri_blog.model.User;
 import com.omnify.gayatri_blog.service.UserService;
 import com.omnify.gayatri_blog.util.BadRequestError;
 import com.omnify.gayatri_blog.util.JwtUtil;
-import jakarta.servlet.http.Cookie;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
