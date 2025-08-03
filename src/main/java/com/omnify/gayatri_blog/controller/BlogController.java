@@ -25,7 +25,7 @@ public class BlogController {
     JwtUtil j;
 
     @PostMapping
-    public ResponseEntity<Blog> createBlog(@CookieValue(name="token", required = false) String token, @RequestBody Blog b){
+    public ResponseEntity<Blog> createBlog(@RequestHeader("Authorization") String token, @RequestBody Blog b){
         if (token == null) {
             throw new UnauthorizedError("Token not found");
         }
@@ -44,7 +44,7 @@ public class BlogController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Blog> getBlogById(@CookieValue(name="token", required = false) String token, @PathVariable Long id){
+    public ResponseEntity<Blog> getBlogById(@RequestHeader("Authorization")  String token, @PathVariable Long id){
         if (token == null) {
             throw new UnauthorizedError("Token not found");
         }
@@ -54,7 +54,7 @@ public class BlogController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Blog> updateBlogById(@CookieValue(name="token", required = false) String token, @RequestBody Blog b, @PathVariable Long id){
+    public ResponseEntity<Blog> updateBlogById(@RequestHeader("Authorization")  String token, @RequestBody Blog b, @PathVariable Long id){
         if (token == null) {
             throw new UnauthorizedError("Token not found");
         }
@@ -70,7 +70,7 @@ public class BlogController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<String> deleteBlogById(@CookieValue(name="token", required = false) String token, @PathVariable Long id){
+    public ResponseEntity<String> deleteBlogById(@RequestHeader("Authorization")  String token, @PathVariable Long id){
         if (token == null) {
             throw new UnauthorizedError("Token not found");
         }

@@ -16,7 +16,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("api/auth")
-@CrossOrigin(origins = {"http://dummy-bucket-69.s3-website.ap-south-1.amazonaws.com", "http://localhost:3000"}, allowCredentials = "true")
 public class UserController {
     @Autowired
     UserService us;
@@ -31,21 +30,12 @@ public class UserController {
         }
         User savedUser = us.registerUser(u);
         String token = j.generateToken(savedUser.getId());
-        ResponseCookie cookie = ResponseCookie.from("token", token)
-                .httpOnly(true)
-                .secure(false) // Set to true if using HTTPS
-                .path("/")
-                .maxAge(60 * 60 * 24 * 7) // 7 days
-                .build();
-        HttpHeaders header = new HttpHeaders();
-        header.add(HttpHeaders.SET_COOKIE, cookie.toString());
-
         // Set cookie in headers
         return ResponseEntity.status(HttpStatus.CREATED)
-                .headers(header)
                 .body(Map.of(
                         "email", savedUser.getEmail(),
-                        "name", savedUser.getName()
+                        "name", savedUser.getName(),
+                        "token",token
                 ));
     }
 
@@ -71,12 +61,13 @@ public class UserController {
                 .headers(header)
                 .body(Map.of(
                         "email", savedUser.getEmail(),
-                        "name", savedUser.getName()
+                        "name", savedUser.getName(),
+                        "token", token
                 ));
     }
 
     @GetMapping
-    public ResponseEntity<Map<String, String>> getUser(@CookieValue(name="token", required = false) String token){
+    public ResponseEntity<Map<String, String>> getUser(@RequestHeader("Authorization") String token){
         if (token == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("Error", "Token not found"));
         }
