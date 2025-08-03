@@ -31,11 +31,18 @@ public class UserController {
         }
         User savedUser = us.registerUser(u);
         String token = j.generateToken(savedUser.getId());
-        Cookie cookie = new Cookie("token", token);
+        ResponseCookie cookie = ResponseCookie.from("token", token)
+                .httpOnly(true)
+                .secure(false) // Set to true if using HTTPS
+                .path("/")
+                .maxAge(60 * 60 * 24 * 7) // 7 days
+                .build();
+        HttpHeaders header = new HttpHeaders();
+        header.add(HttpHeaders.SET_COOKIE, cookie.toString());
 
         // Set cookie in headers
         return ResponseEntity.status(HttpStatus.CREATED)
-                .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                .headers(header)
                 .body(Map.of(
                         "email", savedUser.getEmail(),
                         "name", savedUser.getName()
@@ -51,10 +58,17 @@ public class UserController {
         User savedUser = us.loginUser(u.get("email"), u.get("password"));
         String token = j.generateToken(savedUser.getId());
 
-        Cookie cookie = new Cookie("token", token);
+        ResponseCookie cookie = ResponseCookie.from("token", token)
+                .httpOnly(true)
+                .secure(false) // Set to true if using HTTPS
+                .path("/")
+                .maxAge(60 * 60 * 24 * 7) // 7 days
+                .build();
+        HttpHeaders header = new HttpHeaders();
+        header.add(HttpHeaders.SET_COOKIE, cookie.toString());
         // Set cookie in headers
-        return ResponseEntity.status(HttpStatus.OK)
-                .header(HttpHeaders.SET_COOKIE, cookie.toString())
+        return ResponseEntity.ok()
+                .headers(header)
                 .body(Map.of(
                         "email", savedUser.getEmail(),
                         "name", savedUser.getName()
