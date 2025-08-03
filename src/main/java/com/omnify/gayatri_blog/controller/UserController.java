@@ -4,6 +4,7 @@ import com.omnify.gayatri_blog.model.User;
 import com.omnify.gayatri_blog.service.UserService;
 import com.omnify.gayatri_blog.util.BadRequestError;
 import com.omnify.gayatri_blog.util.JwtUtil;
+import com.omnify.gayatri_blog.util.UnauthorizedError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("api/auth")
@@ -66,11 +68,11 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<Map<String, String>> getUser(@RequestHeader("Authorization") String token){
-        if (token == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("Error", "Token not found"));
+    public ResponseEntity<Map<String, String>> getUser(@RequestHeader("Authorization") Optional<String> token){
+        if (!token.isPresent() || token.isEmpty()) {
+            throw new UnauthorizedError("Token not found");
         }
-        Long Id = j.extractId(token);
+        Long Id = j.extractId(token.get());
         User u = us.getUser(Id);
         return ResponseEntity.status(HttpStatus.OK).body(Map.of("name",u.getName(), "email", u.getEmail() ));
     }

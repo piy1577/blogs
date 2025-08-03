@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("api/blogs")
@@ -25,11 +26,11 @@ public class BlogController {
     JwtUtil j;
 
     @PostMapping
-    public ResponseEntity<Blog> createBlog(@RequestHeader("Authorization") String token, @RequestBody Blog b){
-        if (token == null) {
+    public ResponseEntity<Blog> createBlog(@RequestHeader("Authorization") Optional<String> token, @RequestBody Blog b){
+        if (!token.isPresent() || token.isEmpty()) {
             throw new UnauthorizedError("Token not found");
         }
-        Long Id = j.extractId(token);
+        Long Id = j.extractId(token.get());
 
         if(b.getTitle() == null || b.getContent() == null){
             throw new BadRequestError("Please all the required fields");
@@ -44,32 +45,32 @@ public class BlogController {
     }
 
     @GetMapping("user")
-    public ResponseEntity<List<Blog>> getUserBlogs(@RequestHeader("Authorization")  String token){
-        if (token == null) {
+    public ResponseEntity<List<Blog>> getUserBlogs(@RequestHeader("Authorization")  Optional<String> token){
+        if (!token.isPresent() || token.isEmpty()) {
             throw new UnauthorizedError("Token not found");
         }
-        Long userId = j.extractId(token);
+        Long Id = j.extractId(token.get());
 
-        List<Blog> l = bs.getBlogByUser(userId);
+        List<Blog> l = bs.getBlogByUser(Id);
         return ResponseEntity.status(HttpStatus.OK).body(l);
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Blog> getBlogById(@RequestHeader("Authorization")  String token, @PathVariable Long id){
-        if (token == null) {
+    public ResponseEntity<Blog> getBlogById(@RequestHeader("Authorization")  Optional<String> token, @PathVariable Long id){
+        if (!token.isPresent() || token.isEmpty()) {
             throw new UnauthorizedError("Token not found");
         }
-        Long userId = j.extractId(token);
+        Long Id = j.extractId(token.get());
 
-        return ResponseEntity.status(HttpStatus.OK).body(bs.getBlogById(id, userId));
+        return ResponseEntity.status(HttpStatus.OK).body(bs.getBlogById(id, Id));
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Blog> updateBlogById(@RequestHeader("Authorization")  String token, @RequestBody Blog b, @PathVariable Long id){
-        if (token == null) {
+    public ResponseEntity<Blog> updateBlogById(@RequestHeader("Authorization")  Optional<String> token, @RequestBody Blog b, @PathVariable Long id){
+        if (!token.isPresent() || token.isEmpty()) {
             throw new UnauthorizedError("Token not found");
         }
-        Long Id = j.extractId(token);
+        Long Id = j.extractId(token.get());
         b.setId(id);
 
         if(b.getTitle() == null || b.getContent() == null) {
@@ -81,14 +82,13 @@ public class BlogController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<String> deleteBlogById(@RequestHeader("Authorization")  String token, @PathVariable Long id){
-        if (token == null) {
+    public ResponseEntity<String> deleteBlogById(@RequestHeader("Authorization")  Optional<String> token, @PathVariable Long id){
+        if (!token.isPresent() || token.isEmpty()) {
             throw new UnauthorizedError("Token not found");
         }
+        Long Id = j.extractId(token.get());
 
-        Long userId = j.extractId(token);
-
-        bs.deleteBlogById(id, userId);
+        bs.deleteBlogById(id, Id);
 
         return ResponseEntity.status(HttpStatus.OK).body("Blog Deleted Successfully");
     }
