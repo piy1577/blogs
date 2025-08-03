@@ -33,9 +33,8 @@ public class BlogServiceImplement implements BlogService {
     }
 
     @Override
-    public List<Blog> getAllBlog(Pageable page) {
-        Page<Blog> b = br.findAll(page);
-        return b.getContent();
+    public Page<Blog> getAllBlog(Pageable page) {
+        return br.findAll(page);
     }
 
     @Override

@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface BlogService {
     Blog createBlog(Blog b,Long id);
-    List<Blog> getAllBlog(Pageable page);
+    Page<Blog> getAllBlog(Pageable page);
     Blog getBlogById(Long id, Long user_id);
     Blog updateBlogById(Blog b, Long user_id);
     void deleteBlogById(Long Id, Long user_id);
